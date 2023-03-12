@@ -1,4 +1,5 @@
 use std::io;
+
 use rand::Rng;
 
 // https://stackoverflow.com/questions/27318076/edit-string-in-place-with-a-function
@@ -35,22 +36,27 @@ fn char_input() -> char {
 }
 
 fn main() {
-    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize"];
-    let word_to_guess = word_list[rand::thread_rng().gen_range(1..=word_list.len() - 1)];
+    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize", "jazz", "samurai", "pixels", "intimidation"];
+    let word_to_guess = word_list[rand::thread_rng().gen_range(1..word_list.len())];
     let mut guessed = all_underscores(word_to_guess);
     let mut remaining_guesses = word_to_guess.len();
+    let mut wrong_guesses = String::new();
 
     loop {
-        println!("\n{}", guessed);
-        println!("{remaining_guesses} guesses remaining.\n");
+        println!("\n{remaining_guesses} guesses remaining.");
+        println!("Wrong guesses: {wrong_guesses}\n");
+        println!("{}", guessed);
         println!("Please input your guess: ");
 
         let guess = char_input();
-        if word_to_guess.contains(guess) {
+        if guessed.contains(guess) || wrong_guesses.contains(guess) {
+            println!("You already guessed {guess}!");
+        } else if word_to_guess.contains(guess) {
             println!("Nice! The word contains {guess}!");
             guessed = guess_char(&guessed, word_to_guess, guess);
         } else {
             println!("Sorry, the word does not contain {guess}!");
+            wrong_guesses.push(guess);
             remaining_guesses -= 1;
         }
 

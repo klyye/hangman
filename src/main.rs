@@ -35,10 +35,10 @@ fn char_input() -> char {
 }
 
 fn main() {
-    let word_to_guess = "crustacean";
-    let random_number = rand::thread_rng().gen_range(1..=100);
+    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize"];
+    let word_to_guess = word_list[rand::thread_rng().gen_range(1..=word_list.len() - 1)];
     let mut guessed = all_underscores(word_to_guess);
-    let mut remaining_guesses = word_to_guess.len() + 3;
+    let mut remaining_guesses = word_to_guess.len();
 
     loop {
         println!("\n{}", guessed);
@@ -51,9 +51,9 @@ fn main() {
             guessed = guess_char(&guessed, word_to_guess, guess);
         } else {
             println!("Sorry, the word does not contain {guess}!");
+            remaining_guesses -= 1;
         }
 
-        remaining_guesses -= 1;
         if !guessed.contains('_') {
             println!("Congrats, you won!");
             break;

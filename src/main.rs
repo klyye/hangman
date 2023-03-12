@@ -36,7 +36,7 @@ fn char_input() -> char {
 }
 
 fn main() {
-    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize", "jazz", "samurai", "pixels", "intimidation"];
+    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize", "jazz", "samurai", "pixels", "intimidation", "introduction", "expression", "grapefruit"];
     let word_to_guess = word_list[rand::thread_rng().gen_range(1..word_list.len())];
     let mut guessed = all_underscores(word_to_guess);
     let mut remaining_guesses = word_to_guess.len();
@@ -68,4 +68,6 @@ fn main() {
             break;
         }
     }
+    println!("\n Enter anything to quit...");
+    io::stdin().read_line(&mut String::new()).expect("Failed to read line.");
 }

@@ -1,3 +1,4 @@
+use std::fs;
 use std::io;
 
 use rand::Rng;
@@ -36,7 +37,9 @@ fn char_input() -> char {
 }
 
 fn main() {
-    let word_list = ["crustacean", "masterpiece", "experience", "override", "dynamic", "system", "finished", "reference", "moisturize", "jazz", "samurai", "pixels", "intimidation", "introduction", "expression", "grapefruit"];
+    let words_file_name = "google-10000-english-usa-no-swears-long.txt";
+    let words_file_contents = fs::read_to_string(words_file_name).expect("failed to read file");
+    let word_list: Vec<&str> = words_file_contents.lines().collect();
     let word_to_guess = word_list[rand::thread_rng().gen_range(1..word_list.len())];
     let mut guessed = all_underscores(word_to_guess);
     let mut remaining_guesses = word_to_guess.len();

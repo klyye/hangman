@@ -36,6 +36,12 @@ fn char_input() -> char {
     input.trim().to_lowercase().chars().nth(0).unwrap()
 }
 
+/*
+    TODO:
+    - refactor to make it cleaner
+    - add command line argument to enable "evil" mode
+    - add evil mode
+*/
 fn main() {
     let words_file_name = "google-10000-english-usa-no-swears-long.txt";
     let words_file_contents = fs::read_to_string(words_file_name).expect("failed to read file");
@@ -64,7 +70,7 @@ fn main() {
         }
 
         if !guessed.contains('_') {
-            println!("Congrats, you won!");
+            println!("Congrats, you won! The word was {word_to_guess}.");
             break;
         } else if remaining_guesses <= 0 {
             println!("Sorry, you ran out of guesses! The word was {word_to_guess}.");

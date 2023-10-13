@@ -1,19 +1,13 @@
+use std::collections::HashSet;
+use std::env;
 use std::fs;
 use std::io;
 
-use rand::Rng;
+fn file_to_words(file_name: &str) -> HashSet<String> {
+    fs::read_to_string(file_name).expect("failed to read file").lines().map(|x| x.to_string()).collect()
+}
 
-/*
-    TODO:
-    - refactor to make it cleaner
-    - add command line argument to enable "evil" mode
-    - add evil mode
-*/
-fn main() {
-    let words_file_name = "google-10000-english-usa-no-swears-long.txt";
-    let words_file_contents = fs::read_to_string(words_file_name).expect("failed to read file");
-    let word_list: Vec<&str> = words_file_contents.lines().collect();
-    let word_to_guess = word_list[rand::thread_rng().gen_range(1..word_list.len())];
+fn game_loop(is_evil: bool, word_to_guess: &str) {
     let mut guessed = hangman::all_underscores(word_to_guess);
     let mut remaining_guesses = word_to_guess.len();
     let mut wrong_guesses = String::new();
@@ -44,6 +38,31 @@ fn main() {
             break;
         }
     }
+}
+
+/*
+    TODO:
+    - refactor to make it cleaner
+    - add command line argument to enable "evil" mode
+    - add evil mode
+    - add unit tests
+*/
+fn main() {
+    let long_words_file_name = "google-10000-english-usa-no-swears-long.txt";
+    let mut word_set = file_to_words(long_words_file_name);
+
+    let med_words_file_name = "google-10000-english-usa-no-swears-medium.txt";
+    let med_word_set = file_to_words(med_words_file_name);
+
+    word_set.extend(med_word_set);
+
+    let args: Vec<String> = env::args().collect();
+    let word_to_guess = "horseradish"; //word_set[rand::thread_rng().gen_range(1..word_set.len())];
+    // evil version
+    let len_min = 5;
+    let len_max = 18; // "telecommunications"
+
+    game_loop(true, word_to_guess);
     println!("\n Enter anything to quit...");
     io::stdin().read_line(&mut String::new()).expect("Failed to read line.");
 }

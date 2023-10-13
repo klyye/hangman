@@ -1,3 +1,7 @@
+use std::io;
+
+mod chooser;
+
 // https://stackoverflow.com/questions/27318076/edit-string-in-place-with-a-function
 pub fn all_underscores(s: &str) -> String {
     let mut r = String::with_capacity(s.len());

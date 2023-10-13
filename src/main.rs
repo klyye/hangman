@@ -49,17 +49,12 @@ fn game_loop(is_evil: bool, word_to_guess: &str) {
     - add unit tests
 */
 fn main() {
-    let long_words_file_name = "google-10000-english-usa-no-swears-long.txt";
-    let mut word_set = file_to_words(long_words_file_name);
-
-    let med_words_file_name = "google-10000-english-usa-no-swears-medium.txt";
-    let med_word_set = file_to_words(med_words_file_name);
-
-    word_set.extend(med_word_set);
+    let words_file_name = "google-10000.txt";
 
     let args: Vec<String> = env::args().collect();
-    let chooser = hangman::chooser::RandomChooser::new(long_words_file_name);
+    let chooser = hangman::chooser::RandomChooser::new(words_file_name);
     let word_to_guess = chooser.word();
+
     // evil version
     let len_min = 5;
     let len_max = 18; // "telecommunications"

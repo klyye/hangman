@@ -1,6 +1,6 @@
 use std::io;
 
-mod chooser;
+pub mod chooser;
 
 // https://stackoverflow.com/questions/27318076/edit-string-in-place-with-a-function
 pub fn all_underscores(s: &str) -> String {

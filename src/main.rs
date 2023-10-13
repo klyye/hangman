@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use std::env;
 use std::fs;
 use std::io;
+use hangman::chooser::Chooser;
 
 fn file_to_words(file_name: &str) -> HashSet<String> {
     fs::read_to_string(file_name).expect("failed to read file").lines().map(|x| x.to_string()).collect()
@@ -57,7 +58,8 @@ fn main() {
     word_set.extend(med_word_set);
 
     let args: Vec<String> = env::args().collect();
-    let word_to_guess = "horseradish"; //word_set[rand::thread_rng().gen_range(1..word_set.len())];
+    let chooser = hangman::chooser::RandomChooser::new(long_words_file_name);
+    let word_to_guess = chooser.word();
     // evil version
     let len_min = 5;
     let len_max = 18; // "telecommunications"

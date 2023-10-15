@@ -1,41 +1,38 @@
-use std::collections::HashSet;
 use std::env;
-use std::fs;
 use std::io;
+
 use hangman::chooser::Chooser;
 
-fn file_to_words(file_name: &str) -> HashSet<String> {
-    fs::read_to_string(file_name).expect("failed to read file").lines().map(|x| x.to_string()).collect()
-}
-
-fn game_loop(is_evil: bool, word_to_guess: &str) {
-    let mut guessed = hangman::all_underscores(word_to_guess);
-    let mut remaining_guesses = word_to_guess.len();
+fn game_loop(is_evil: bool, words_file: &str) {
+    let mut chooser = hangman::chooser::RandomChooser::new(words_file);
+    let mut remaining_guesses = chooser.word().len();
     let mut wrong_guesses = String::new();
 
     loop {
         println!("\n{remaining_guesses} guesses remaining.");
         println!("Wrong guesses: {wrong_guesses}\n");
-        println!("{}", guessed);
+        println!("{}", chooser.pattern());
         println!("Please input your guess: ");
 
         let guess = hangman::char_input();
-        if guessed.contains(guess) || wrong_guesses.contains(guess) {
+        if chooser.pattern().contains(guess) || wrong_guesses.contains(guess) {
             println!("You already guessed {guess}!");
-        } else if word_to_guess.contains(guess) {
+        } else if chooser.word().contains(guess) {
             println!("Nice! The word contains {guess}!");
-            guessed = hangman::guess_char(&guessed, word_to_guess, guess);
+            chooser.guess(guess);
         } else {
             println!("Sorry, the word does not contain {guess}!");
             wrong_guesses.push(guess);
             remaining_guesses -= 1;
         }
 
-        if !guessed.contains('_') {
-            println!("Congrats, you won! The word was {word_to_guess}.");
+        let word = chooser.word();
+        if !chooser.pattern().contains('_') {
+            // why can't i use chooser.word()?
+            println!("Congrats, you won! The word was {word}.");
             break;
         } else if remaining_guesses <= 0 {
-            println!("Sorry, you ran out of guesses! The word was {word_to_guess}.");
+            println!("Sorry, you ran out of guesses! The word was {word}.");
             break;
         }
     }
@@ -52,14 +49,12 @@ fn main() {
     let words_file_name = "google-10000.txt";
 
     let args: Vec<String> = env::args().collect();
-    let chooser = hangman::chooser::RandomChooser::new(words_file_name);
-    let word_to_guess = chooser.word();
 
     // evil version
     let len_min = 5;
     let len_max = 18; // "telecommunications"
 
-    game_loop(true, word_to_guess);
+    game_loop(true, words_file_name);
     println!("\n Enter anything to quit...");
     io::stdin().read_line(&mut String::new()).expect("Failed to read line.");
 }

@@ -2,23 +2,6 @@ use std::io;
 
 pub mod chooser;
 
-// https://stackoverflow.com/questions/27318076/edit-string-in-place-with-a-function
-pub fn all_underscores(s: &str) -> String {
-    let mut r = String::with_capacity(s.len());
-    for _ in s.chars() {
-        r.push('_');
-    }
-    r
-}
-
-pub fn guess_char(guessed: &str, correct_word: &str, guess: char) -> String {
-    let mut r = String::with_capacity(guessed.len());
-    for (i, c) in correct_word.char_indices() {
-        r.push(if c == guess { c } else { guessed.chars().nth(i).unwrap() });
-    }
-    r
-}
-
 pub fn char_input() -> char {
     let mut input = String::new();
     io::stdin()
